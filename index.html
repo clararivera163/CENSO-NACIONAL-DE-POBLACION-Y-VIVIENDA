@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard de Cobertura Laboral — Censistas</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="eyebrow">INE HONDURAS · MONITOREO OPERATIVO</div>
+    <h1>Cobertura laboral de censistas</h1>
+    <p>Seguimiento municipal por semana · 298 municipios</p>
+  </div>
+  <div class="badge">Versión pública · datos agregados</div>
+</header>
+
+<main>
+<section class="controls">
+  <div>
+    <label>Departamento</label>
+    <select id="depFilter"><option value="">Todos los departamentos</option></select>
+  </div>
+  <div>
+    <label>Buscar municipio</label>
+    <input id="search" placeholder="Ej. Danlí, Tela, Choloma...">
+  </div>
+  <div>
+    <label>Estado semana 8</label>
+    <select id="statusFilter">
+      <option value="">Todos</option>
+      <option>ALERTA NEGRA</option><option>ROJA</option><option>AMARILLA</option><option>VERDE</option>
+    </select>
+  </div>
+</section>
+
+<section class="kpis">
+  <div class="kpi"><span>Municipios</span><strong id="kpiMun">—</strong><small>Universo de seguimiento</small></div>
+  <div class="kpi black"><span>Alerta negra</span><strong id="kpiBlack">—</strong><small>0% en semana 8</small></div>
+  <div class="kpi red"><span>Roja</span><strong id="kpiRed">—</strong><small>1%–30%</small></div>
+  <div class="kpi yellow"><span>Amarilla</span><strong id="kpiYellow">—</strong><small>31%–70%</small></div>
+  <div class="kpi green"><span>Verde</span><strong id="kpiGreen">—</strong><small>71%–100%</small></div>
+</section>
+
+<section class="card mapcard">
+  <div class="cardhead">
+    <div><h2>Mapa municipal de cobertura</h2><p>Semana 8 · pasa el cursor sobre un municipio para consultar su cobertura</p></div>
+    <div class="legend"><span><i class="dot black"></i> 0%</span><span><i class="dot red"></i> 1–30%</span><span><i class="dot yellow"></i> 31–70%</span><span><i class="dot green"></i> 71–100%</span></div>
+  </div>
+  <div id="mapWrap"><div id="mapLoading">Cargando mapa municipal…</div><svg id="hnMap" viewBox="0 0 900 620" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="mapnote">Límites municipales de referencia GADM 4.1 (ADM2); el indicador proviene de la base de censistas cargada.</div>
+</section>
+
+<section class="grid two">
+  <article class="card">
+    <div class="cardhead"><div><h2>Evolución nacional</h2><p>Cobertura ponderada de censistas activos</p></div></div>
+    <canvas id="trendChart"></canvas>
+  </article>
+  <article class="card">
+    <div class="cardhead"><div><h2>Estado municipal</h2><p>Distribución por semáforo · semana 8</p></div></div>
+    <canvas id="statusChart"></canvas>
+  </article>
+</section>
+
+<section class="card">
+  <div class="cardhead">
+    <div><h2>Municipios</h2><p>Haz clic en una fila para ver su evolución semanal.</p></div>
+    <span id="resultCount" class="muted"></span>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Municipio</th><th>Departamento</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th><th>S7</th><th>S8</th><th>Δ S7→S8</th><th>Estado</th></tr></thead>
+      <tbody id="munTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="grid two">
+  <article class="card">
+    <div class="cardhead"><div><h2>Mayores caídas</h2><p>Cambio de semana 7 a semana 8</p></div></div>
+    <div id="alerts"></div>
+  </article>
+  <article class="card">
+    <div class="cardhead"><div><h2>Resumen departamental</h2><p>Promedio simple de cobertura municipal</p></div></div>
+    <div class="tablewrap compact"><table><thead><tr><th>Departamento</th><th>S8</th><th>Negra</th><th>Roja</th><th>Amarilla</th><th>Verde</th></tr></thead><tbody id="depTable"></tbody></table></div>
+  </article>
+</section>
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modalbox">
+    <button id="close">×</button>
+    <div id="modalContent"></div>
+    <canvas id="munChart"></canvas>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
